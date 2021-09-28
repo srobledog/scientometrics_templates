@@ -1,0 +1,51 @@
+---
+title: "Scientometric_template_1"
+author: "Sebastian Robledo"
+date: "9/27/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Creating the environment
+
+```{r}
+library(tidyverse)
+library(tosr)
+library(bibliometrix)
+library(sjrdata)
+library(journalabbr)
+library(gt)
+```
+
+# Data getting
+
+```{r}
+data_science <- 
+  tosr::tosr_load("DCA 467 15 July 2021.bib", 
+                  "DCA 467 15 July 2021.txt")
+```
+
+```{r}
+data_science$df |> 
+  filter(str_detect(DT, "ARTICLE")) |> 
+  select(journal = SO, data_base = ref_type) |> 
+  na.omit() |> 
+  add_count(journal) |> 
+  unique() |> 
+  filter(!duplicated(journal)) |> 
+  arrange(desc(n)) |> 
+  slice(1:10) |> 
+  rename(publications = n) |> 
+  gt()
+```
+
+```{r}
+
+```
+
+
